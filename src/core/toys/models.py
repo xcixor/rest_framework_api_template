@@ -8,6 +8,9 @@ class Toy(models.Model):
     toy_category = models.CharField(max_length=200, blank=False, default='')
     release_date = models.DateTimeField()
     was_included_in_home = models.BooleanField(default=False)
-    
+
     class Meta:
         ordering = ('name',)
+
+    def __str__(self):
+        return self.name
