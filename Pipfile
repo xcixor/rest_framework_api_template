@@ -1,0 +1,15 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pylint-django = "*"
+
+[packages]
+django = "==2.2.10"
+djangorestframework = "==3.11.0"
+httpie = "*"
+
+[requires]
+python_version = "3.8"
