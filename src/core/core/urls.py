@@ -22,4 +22,5 @@ urlpatterns = [
     # url(r'^', include('drones.urls')),
     # path('toys/', include('toys.urls', namespace='toys')),
     path('', include('drones.urls')),
+    path('api-auth/', include('rest_framework.urls'))
 ]

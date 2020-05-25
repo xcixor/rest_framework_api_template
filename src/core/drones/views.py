@@ -4,6 +4,10 @@ from django_filters import AllValuesFilter, DateTimeFilter, NumberFilter
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from rest_framework import permissions
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
+from drones import custompermissions
 from drones.models import DroneCategory
 from drones.models import Drone
 from drones.models import Pilot
@@ -50,11 +54,23 @@ class DroneList(generics.ListCreateAPIView):
         'manufacturing_date',
         )
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        custompermissions.IsCurrentUserOwnerOrReadOnly,
+    )
+
 
 class DroneDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Drone.objects.all()
     serializer_class = DroneSerializer
     name = 'drone-detail'
+    permission_classes = (
+        permissions.IsAuthenticatedOrReadOnly,
+        custompermissions.IsCurrentUserOwnerOrReadOnly,
+    )
 
 
 class PilotList(generics.ListCreateAPIView):
@@ -73,12 +89,24 @@ class PilotList(generics.ListCreateAPIView):
         'name',
         'races_count'
         )
+    authentication_classes = (
+        TokenAuthentication,
+    )
+    permission_classes = (
+        IsAuthenticated,
+    )
 
 
 class PilotDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Pilot.objects.all()
     serializer_class = PilotSerializer
     name = 'pilot-detail'
+    authentication_classes = (
+        TokenAuthentication,
+    )
+    permission_classes = (
+        IsAuthenticated,
+    )
 
 
 class CompetitionFilter(filters.BaseFilterBackend):
@@ -132,8 +160,10 @@ class ApiRoot(generics.GenericAPIView):
 
     def get(self, request, format=None):
         return Response({
-            'drone-categories': reverse(DroneCategoryList.name, request=request, format=format),
+            'drone-categories': reverse(
+                DroneCategoryList.name, request=request, format=format),
             'drones': reverse(DroneList.name, request=request, format=format),
             'pilots': reverse(PilotList.name, request=request, format=format),
-            'competitions': reverse(CompetitionList.name, request=request, format=format),
+            'competitions': reverse(
+                CompetitionList.name, request=request, format=format),
             })
