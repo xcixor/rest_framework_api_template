@@ -21,6 +21,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # url(r'^', include('drones.urls')),
     # path('toys/', include('toys.urls', namespace='toys')),
-    path('', include('drones.urls')),
-    path('api-auth/', include('rest_framework.urls'))
+    path('v1/', include('drones.urls', namespace='v1')),
+    path(
+        'v1/api-auth/',
+        include('rest_framework.urls', namespace='rest_framework_auth/v1')),
+    path('v2/', include('drones.v2.urls', namespace='v2')),
+    path(
+        'v2/api-auth/',
+        include('rest_framework.urls', namespace='rest_framework_auth/v2')),
 ]
