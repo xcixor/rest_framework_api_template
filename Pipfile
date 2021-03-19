@@ -8,7 +8,7 @@ pylint-django = "*"
 
 [packages]
 django = "==2.2.10"
-djangorestframework = "==3.11.0"
+djangorestframework = "==3.11.2"
 httpie = "*"
 psycopg2-binary = "*"
 django-filter = "*"
